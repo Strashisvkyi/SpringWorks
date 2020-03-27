@@ -1,44 +1,49 @@
 package ua.lviv.iot.spring.project7.rest.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Student {
+    private String firstName;
+    private String secondName;
+    private Integer id;
 
-	private String firstName;
+    public Student() {
 
-	private String lastName;
+    }
 
-	private Integer id;
+    public Student(String firstName, String secondName) {
+        this.firstName = firstName;
+        this.secondName = secondName;
+    }
 
-	public Student() {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public Integer getId() {
+        return id;
+    }
 
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public Integer getId() {
-		return id;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public Student(String firstName, String lastName) {
-		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
-	}
+    public String getSecondName() {
+        return secondName;
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
 }
