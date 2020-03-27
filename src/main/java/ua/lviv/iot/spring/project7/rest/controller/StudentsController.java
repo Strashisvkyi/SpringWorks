@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,49 +17,50 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import ua.lviv.iot.spring.project7.business.StudentService;
 import ua.lviv.iot.spring.project7.rest.model.Student;
 
 @RequestMapping("/students")
 @RestController
 public class StudentsController {
+    private Map<Integer, Student> students = new HashMap<>();
+    private AtomicInteger idCounter = new AtomicInteger();
+    @Autowired
+    private StudentService studentService;
 
-	private Map<Integer, Student> students = new HashMap<>();
+    @GetMapping
+    public List<Student> getStudents() {
+        return new LinkedList<Student>(students.values());
+    }
 
-	private AtomicInteger IdCounter = new AtomicInteger();
+    @GetMapping(path = "/{id}")
+    public Student getStudent(final @PathVariable("id") Integer studentId) {
+        return students.get(studentId);
+    }
 
-	@GetMapping
-	public List<Student> getStudent() {
-		return new LinkedList<Student>(students.values());
-	}
+    @PostMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
+    public Student createStudent(final @RequestBody Student student) {
 
-	@GetMapping(path = "/{id}")
-	public Student getStudent(@PathVariable("id") Integer studentId) {
-		return students.get(studentId);
-	}
+        System.out.println(studentService.createStudent(student));
 
-	@PostMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
-	public Student createStudent(final @RequestBody Student student) {
+        student.setId(idCounter.incrementAndGet());
+        students.put(student.getId(), student);
+        return student;
+    }
 
-		student.setId(IdCounter.incrementAndGet());
-		students.put(student.getId(), student);
-		return student;
-	}
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Student> deleteStudent(@PathVariable("id") Integer studentId) {
+        HttpStatus status = students.remove(studentId) == null ? HttpStatus.NOT_FOUND : HttpStatus.OK;
+        return ResponseEntity.status(status).build();
+    }
 
-	@DeleteMapping(path = "/{id}")
-	public ResponseEntity<Student> deleteStudent(@PathVariable("id") Integer studentId) {
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<Student> updateStudent(final @PathVariable("id") Integer studentId,
+            final @RequestBody Student student) {
 
-		HttpStatus status = students.remove(studentId) == null ? HttpStatus.NOT_FOUND : HttpStatus.OK;
-		return ResponseEntity.status(status).build();
-	}
-
-	@PutMapping(path = "/{id}")
-	public ResponseEntity updateStudent(final @PathVariable("id") Integer studentId,
-			final @RequestBody Student student) {
-
-		HttpStatus status = students.put(studentId, student) == null ? HttpStatus.NOT_FOUND : HttpStatus.OK;
-		return ResponseEntity.status(status).build();
-	}
+        HttpStatus status = students.put(studentId, student) == null ? HttpStatus.NOT_FOUND : HttpStatus.OK;
+        return ResponseEntity.status(status).build();
+    }
 }
