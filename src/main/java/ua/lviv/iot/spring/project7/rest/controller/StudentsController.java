@@ -42,9 +42,6 @@ public class StudentsController {
 
     @PostMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
     public Student createStudent(final @RequestBody Student student) {
-
-        System.out.println(studentService.createStudent(student));
-
         student.setId(idCounter.incrementAndGet());
         students.put(student.getId(), student);
         return student;
