@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import ua.lviv.iot.spring.project7.business.StudentService;
 import ua.lviv.iot.spring.project7.rest.model.Student;
 
@@ -40,7 +38,7 @@ public class StudentsController {
         return students.get(studentId);
     }
 
-    @PostMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
+    @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public Student createStudent(final @RequestBody Student student) {
         student.setId(idCounter.incrementAndGet());
         students.put(student.getId(), student);
@@ -55,7 +53,7 @@ public class StudentsController {
 
     @PutMapping(path = "/{id}")
     public ResponseEntity<Student> updateStudent(final @PathVariable("id") Integer studentId,
-            final @RequestBody Student student) {
+                                                 final @RequestBody Student student) {
 
         HttpStatus status = students.put(studentId, student) == null ? HttpStatus.NOT_FOUND : HttpStatus.OK;
         return ResponseEntity.status(status).build();

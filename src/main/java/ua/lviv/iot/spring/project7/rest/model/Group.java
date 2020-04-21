@@ -1,9 +1,7 @@
 package ua.lviv.iot.spring.project7.rest.model;
 
 import java.util.Set;
-
 import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
